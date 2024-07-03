@@ -1,0 +1,70 @@
+import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+public class SimpleColorSelector extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        // Create the text label
+        Text text = new Text("Colorful Text");
+        text.setFont(new Font(32));
+        
+        // Create sliders for Red, Green, Blue, and Opacity
+        Slider redSlider = createColorSlider();
+        Slider greenSlider = createColorSlider();
+        Slider blueSlider = createColorSlider();
+        Slider opacitySlider = new Slider(0, 1, 1);
+        
+        // Add labels for the sliders
+        Label redLabel = new Label("Red");
+        Label greenLabel = new Label("Green");
+        Label blueLabel = new Label("Blue");
+        Label opacityLabel = new Label("Opacity");
+        
+        // Create a layout and add all elements
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        layout.getChildren().addAll(text, redLabel, redSlider, greenLabel, greenSlider, blueLabel, blueSlider, opacityLabel, opacitySlider);
+        
+        // Add listeners to update the color when the sliders are moved
+        ChangeListener<Number> colorChangeListener = (observable, oldValue, newValue) -> 
+            text.setFill(Color.rgb(
+                (int) redSlider.getValue(), 
+                (int) greenSlider.getValue(), 
+                (int) blueSlider.getValue(), 
+                opacitySlider.getValue()
+            ));
+        
+        redSlider.valueProperty().addListener(colorChangeListener);
+        greenSlider.valueProperty().addListener(colorChangeListener);
+        blueSlider.valueProperty().addListener(colorChangeListener);
+        opacitySlider.valueProperty().addListener(colorChangeListener);
+        
+        // Set up the stage
+        Scene scene = new Scene(layout, 400, 300);
+        primaryStage.setTitle("Color Selector");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+    
+    private Slider createColorSlider() {
+        Slider slider = new Slider(0, 255, 0);
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        return slider;
+    }
+    
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
